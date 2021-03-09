@@ -5,12 +5,48 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      squares: [0, 1, 2, 3, 4, 5, 6, 7, 8]
+      squares: Array(9).fill(null),
+      count: 0
     };
+    this.winnerLine = [
+      [0, 1, 2],
+      [3, 4, 5],
+      [6, 7, 8],
+      [0, 3, 6],
+      [1, 4, 7],
+      [2, 5, 8],
+      [0, 4, 8],
+      [2, 4, 6]
+    ]
+  }
+
+  isWinner = () => {
+    let s = (this.state.count % 2 === 0) ? 'X' : 'O';
+    for (let i = 0; i < 8; i++) {
+      let line = this.winnerLine[i];
+      if (this.state.squares[line[0]] === s
+          && this.state.squares[line[1]] === s
+          && this.state.squares[line[2]] === s) {
+            alert(s + ' Win')
+        setTimeout(() => {
+          this.setState({squares: Array(9).fill(null)});
+          this.setState({count: 0});
+        }, 2000)
+      }
+    }
   }
 
   clickHandler = event => {
-
+    let data = event.target.getAttribute('data');
+    let currentSquares = this.state.squares;
+    if (currentSquares[data] === null) {
+      currentSquares[data] = (this.state.count % 2 === 0) ? 'X' : 'O';
+     this.setState({ count:  this.state.count + 1 });
+      this.setState({ squares: currentSquares });
+    } else {
+      alert('You can not do it this way!')
+    }
+    this.isWinner();
   }
 
   render() {
